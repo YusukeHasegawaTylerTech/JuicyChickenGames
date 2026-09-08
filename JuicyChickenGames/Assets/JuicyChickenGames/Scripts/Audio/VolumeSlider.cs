@@ -1,37 +1,41 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-public class VolumeSlider : MonoBehaviour
+namespace JuicyChickenGames
 {
-	public Slider Slider;
-	public String Channel;
-
-	public AudioMixer AudioMixer;
-
-	protected void Start()
+	public class VolumeSlider : MonoBehaviour
 	{
-		AudioMixer.GetFloat(Channel, out float savedVolume);
-		Slider.value = ReverseVolume(savedVolume);
-		Slider.onValueChanged.AddListener(delegate { ChangeVolume(); });
-	}
+		public Slider Slider;
+		public String Channel;
 
-	float ReverseVolume(float result)
-	{
-		float logValue = result / 20f; // Undo multiplication by 20
-		float sliderValue = Mathf.Pow(10f, logValue); // Reverse logarithm
-		return sliderValue;
-	}
+		public AudioMixer AudioMixer;
 
-	private void ChangeVolume()
-	{
-		if (AudioMixer != null)
+		// Slider values <= 0 would otherwise produce Log10(0) == -Infinity.
+		private const float MinSliderValue = 0.0001f;
+
+		protected void Start()
 		{
-			var sliderValue = Slider.value;
-			AudioMixer.SetFloat(Channel, Mathf.Log10(sliderValue) * 20);
+			AudioMixer.GetFloat(Channel, out float savedVolume);
+			Slider.value = ReverseVolume(savedVolume);
+			Slider.onValueChanged.AddListener(delegate { ChangeVolume(); });
+		}
+
+		float ReverseVolume(float result)
+		{
+			float logValue = result / 20f; // Undo multiplication by 20
+			float sliderValue = Mathf.Pow(10f, logValue); // Reverse logarithm
+			return sliderValue;
+		}
+
+		private void ChangeVolume()
+		{
+			if (AudioMixer != null)
+			{
+				var sliderValue = Mathf.Max(Slider.value, MinSliderValue);
+				AudioMixer.SetFloat(Channel, Mathf.Log10(sliderValue) * 20);
+			}
 		}
 	}
 }

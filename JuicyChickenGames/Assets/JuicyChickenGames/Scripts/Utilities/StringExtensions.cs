@@ -1,20 +1,23 @@
-﻿public static class StringExtensions
+﻿namespace JuicyChickenGames
 {
-    public static string TrimSuffix(this string str, string suffix)
+    public static class StringExtensions
     {
-        if (str.EndsWith(suffix))
+        public static string TrimSuffix(this string str, string suffix)
         {
-            return str.Substring(0, str.Length - suffix.Length);
+            if (str.EndsWith(suffix))
+            {
+                return str.Substring(0, str.Length - suffix.Length);
+            }
+            return str;
         }
-        return str;
-    }
 
-    public static string TrimPrefix(this string str, string prefix)
-    {
-        if (str.StartsWith(prefix))
+        public static string TrimPrefix(this string str, string prefix)
         {
-            return str.Substring(prefix.Length);
+            if (str.StartsWith(prefix))
+            {
+                return str.Substring(prefix.Length);
+            }
+            return str;
         }
-        return str;
     }
 }
