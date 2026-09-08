@@ -26,11 +26,12 @@ that project's copy is expected to be edited freely and will drift from this one
     the Inspector, or leave it blank to fall back to `Camera.main`.
   - `Scene/LoadingSceneIntegration.cs` — Editor-only. Lets you press Play on any
     scene and still go through your bootstrap flow: if the active scene isn't
-    build index 0, it redirects to scene 0 and records which scene you meant to
-    open in `LoadingSceneIntegration.otherScene`. Have your bootstrap scene's
-    script read that field once it's done initializing and load that scene.
-    Requires your bootstrap scene to be build index 0 in
-    File > Build Settings > Scenes In Build.
+    build index 0, it redirects to scene 0 and remembers which scene you meant
+    to open. Have your bootstrap scene's script call
+    `LoadingSceneIntegration.TryLoadOtherScene()` once it's done initializing;
+    it loads that scene and returns `true`, or returns `false` (does nothing)
+    if there's no scene to return to. Requires your bootstrap scene to be
+    build index 0 in File > Build Settings > Scenes In Build.
   - `ScaleToFitScreen.cs` — scales a `SpriteRenderer` to fill an orthographic
     camera's viewport.
   - `Utilities/` — general extension methods (`EnumExtensions`,
